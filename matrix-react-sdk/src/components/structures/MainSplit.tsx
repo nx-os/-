@@ -68,7 +68,7 @@ export default class MainSplit extends React.Component<IProps> {
             children = <Resizable
                 defaultSize={this.loadSidePanelSize()}
                 minWidth={264}
-                maxWidth="50%"
+                maxWidth="80%"
                 enable={{
                     top: false,
                     right: true,

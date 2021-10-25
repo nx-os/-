@@ -244,8 +244,8 @@ function customTagAesthetics(tagId: TagID): ITagAesthetics {
     };
 }
 
-@replaceableComponent("views.rooms.RoomList")
-export default class RoomList extends React.PureComponent<IProps, IState> {
+@replaceableComponent("views.rooms.RoomUsersList")
+export default class RoomUsersList extends React.PureComponent<IProps, IState> {
     private dispatcherRef;
     private customTagStoreRef;
     private roomStoreToken: fbEmitter.EventSubscription;
@@ -466,12 +466,15 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
             if (tagId === CUSTOM_TAGS_BEFORE_TAG) {
                 const customTags = Object.keys(this.state.sublists)
                     .filter(tagId => isCustomTag(tagId));
+                    
                 tags.push(...customTags);
             }
             tags.push(tagId);
             return tags;
         }, [] as TagID[])
             .map(orderedTagId => {
+                console.log('This is Spaaaaaaaaaaaaaaaaara'+orderedTagId)
+               
                 let extraTiles = null;
                 if (orderedTagId === DefaultTagID.Invite) {
                     extraTiles = this.renderCommunityInvites();
@@ -483,10 +486,9 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
                     ? customTagAesthetics(orderedTagId)
                     : TAG_AESTHETICS[orderedTagId];
                 if (!aesthetics) throw new Error(`Tag ${orderedTagId} does not have aesthetics`);
-                if (orderedTagId == 'im.vector.fake.direct'){
+                if (orderedTagId != 'im.vector.fake.direct'){
                     return
                 }
-
                 // The cost of mounting/unmounting this component offsets the cost
                 // of keeping it in the DOM and hiding it when it is not required
                 return <RoomSublist

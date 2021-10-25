@@ -195,6 +195,14 @@ export default class UserMenu extends React.Component<IProps, IState> {
         ev.stopPropagation();
         const target = ev.target as HTMLButtonElement;
         this.setState({ contextMenuPosition: target.getBoundingClientRect() });
+/*        this.setState({
+        contextMenuPosition: {
+            left: target.getBoundingClientRect().left-450,
+            top: ev.clientY,
+            width: 20,
+            height: 0,
+        },
+    }); */
     };
 
     private onContextMenu = (ev: React.MouseEvent) => {

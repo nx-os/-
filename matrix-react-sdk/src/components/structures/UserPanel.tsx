@@ -32,7 +32,7 @@ import { BreadcrumbsStore } from "../../stores/BreadcrumbsStore";
 import { UPDATE_EVENT } from "../../stores/AsyncStore";
 import ResizeNotifier from "../../utils/ResizeNotifier";
 import RoomListStore, { LISTS_UPDATE_EVENT } from "../../stores/room-list/RoomListStore";
-import IndicatorScrollbar from "../structures/IndicatorScrollbar";
+import IndicatorScrollbar from "./IndicatorScrollbar";
 import AccessibleTooltipButton from "../views/elements/AccessibleTooltipButton";
 import RoomListNumResults from "../views/rooms/RoomListNumResults";
 import LeftPanelWidget from "./LeftPanelWidget";
@@ -40,6 +40,7 @@ import { replaceableComponent } from "../../utils/replaceableComponent";
 import SpaceStore, { UPDATE_SELECTED_SPACE } from "../../stores/SpaceStore";
 import { getKeyBindingsManager, RoomListAction } from "../../KeyBindingsManager";
 import UIStore from "../../stores/UIStore";
+import RoomUsersList from "../views/rooms/RoomUsersList";
 
 interface IProps {
     isMinimized: boolean;
@@ -60,8 +61,8 @@ const cssClasses = [
     "mx_RoomSublist_showNButton",
 ];
 
-@replaceableComponent("structures.LeftPanel")
-export default class LeftPanel extends React.Component<IProps, IState> {
+@replaceableComponent("structures.UserPanel")
+export default class UserPanel extends React.Component<IProps, IState> {
     private ref: React.RefObject<HTMLDivElement> = createRef();
     private listContainerRef: React.RefObject<HTMLDivElement> = createRef();
     private focusedElement = null;
@@ -353,7 +354,7 @@ export default class LeftPanel extends React.Component<IProps, IState> {
     }
 
     private renderBreadcrumbs(): React.ReactNode {
-        if (this.state.showBreadcrumbs && !this.props.isMinimized) {
+      //  if (this.state.showBreadcrumbs && !this.props.isMinimized) {
             return (
                 <IndicatorScrollbar
                     className="mx_LeftPanel_breadcrumbsContainer mx_AutoHideScrollbar"
@@ -362,7 +363,7 @@ export default class LeftPanel extends React.Component<IProps, IState> {
                     <RoomBreadcrumbs />
                 </IndicatorScrollbar>
             );
-        }
+       // }
     }
 
     private renderSearchDialExplore(): React.ReactNode {
@@ -408,7 +409,7 @@ export default class LeftPanel extends React.Component<IProps, IState> {
     }
 
     public render(): React.ReactNode {
-        const roomList = <RoomList
+        const roomuserList = <RoomUsersList
             onKeyDown={this.onKeyDown}
             resizeNotifier={this.props.resizeNotifier}
             onFocus={this.onFocus}
@@ -432,9 +433,6 @@ export default class LeftPanel extends React.Component<IProps, IState> {
         return (
             <div className={containerClasses} ref={this.ref}>
                 <aside className="mx_LeftPanel_roomListContainer">
-                  {/*   { this.renderHeader() }
-                    { this.renderSearchDialExplore() }
-                    { this.renderBreadcrumbs() } */}
                     <RoomListNumResults onVisibilityChange={this.refreshStickyHeaders} />
                     <div className="mx_LeftPanel_roomListWrapper">
                         <div
@@ -444,10 +442,12 @@ export default class LeftPanel extends React.Component<IProps, IState> {
                             // overflow:scroll;, so force it out of tab order.
                             tabIndex={-1}
                         >
-                            { roomList }
+                            { roomuserList }
                         </div>
                     </div>
                     { !this.props.isMinimized && <LeftPanelWidget /> }
+                  {/*   { this.renderBreadcrumbs() } */}
+               {/*      { this.renderHeader() } */}
                 </aside>
             </div>
         );

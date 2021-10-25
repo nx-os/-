@@ -70,6 +70,8 @@ import GroupFilterPanel from './GroupFilterPanel';
 import CustomRoomTagPanel from './CustomRoomTagPanel';
 import { mediaFromMxc } from "../../customisations/Media";
 import LegacyCommunityPreview from "./LegacyCommunityPreview";
+import UserPanel from './UserPanel';
+import TopPanel from './TopPanel';
 
 // We need to fetch each pinned message individually (if we don't already have it)
 // so each pinned message may trigger a request. Limit the number per room for sanity.
@@ -659,12 +661,17 @@ class LoggedInView extends React.Component<IProps, IState> {
 
         return (
             <MatrixClientContext.Provider value={this._matrixClient}>
+                <TopPanel
+                            isMinimized={this.props.collapseLhs || false}
+                            resizeNotifier={this.props.resizeNotifier}
+                        />
                 <div
                     onPaste={this.onPaste}
                     onKeyDown={this.onReactKeyDown}
                     className={wrapperClasses}
                     aria-hidden={this.props.hideToSRUsers}
                 >
+                    
                     <ToastContainer />
                     <div className={bodyClasses}>
                         <div className='mx_LeftPanel_wrapper'>
@@ -703,6 +710,10 @@ class LoggedInView extends React.Component<IProps, IState> {
                         <div className="mx_RoomView_wrapper">
                             { pageElement }
                         </div>
+                        <UserPanel
+                            isMinimized={this.props.collapseLhs || true}
+                            resizeNotifier={this.props.resizeNotifier}
+                        />
                     </div>
                 </div>
                 <CallContainer />

@@ -60,8 +60,8 @@ const cssClasses = [
     "mx_RoomSublist_showNButton",
 ];
 
-@replaceableComponent("structures.LeftPanel")
-export default class LeftPanel extends React.Component<IProps, IState> {
+@replaceableComponent("structures.TopPanel")
+export default class TopPanel extends React.Component<IProps, IState> {
     private ref: React.RefObject<HTMLDivElement> = createRef();
     private listContainerRef: React.RefObject<HTMLDivElement> = createRef();
     private focusedElement = null;
@@ -257,16 +257,16 @@ export default class LeftPanel extends React.Component<IProps, IState> {
 
         // add appropriate sticky classes to wrapper so it has
         // the necessary top/bottom padding to put the sticky header in
-        const listWrapper = list.parentElement; // .mx_LeftPanel_roomListWrapper
+        const listWrapper = list.parentElement; // .mx_TopPanel_roomListWrapper
         if (lastTopHeader) {
-            listWrapper.classList.add("mx_LeftPanel_roomListWrapper_stickyTop");
+            listWrapper.classList.add("mx_TopPanel_roomListWrapper_stickyTop");
         } else {
-            listWrapper.classList.remove("mx_LeftPanel_roomListWrapper_stickyTop");
+            listWrapper.classList.remove("mx_TopPanel_roomListWrapper_stickyTop");
         }
         if (firstBottomHeader) {
-            listWrapper.classList.add("mx_LeftPanel_roomListWrapper_stickyBottom");
+            listWrapper.classList.add("mx_TopPanel_roomListWrapper_stickyBottom");
         } else {
-            listWrapper.classList.remove("mx_LeftPanel_roomListWrapper_stickyBottom");
+            listWrapper.classList.remove("mx_TopPanel_roomListWrapper_stickyBottom");
         }
     }
 
@@ -346,8 +346,8 @@ export default class LeftPanel extends React.Component<IProps, IState> {
 
     private renderHeader(): React.ReactNode {
         return (
-            <div className="mx_LeftPanel_userHeader">
-                <UserMenu isMinimized={this.props.isMinimized} />
+            <div className="mx_TopPanel_userHeader">
+                <UserMenu isMinimized={!this.props.isMinimized} />
             </div>
         );
     }
@@ -356,7 +356,7 @@ export default class LeftPanel extends React.Component<IProps, IState> {
         if (this.state.showBreadcrumbs && !this.props.isMinimized) {
             return (
                 <IndicatorScrollbar
-                    className="mx_LeftPanel_breadcrumbsContainer mx_AutoHideScrollbar"
+                    className="mx_TopPanel_breadcrumbsContainer mx_AutoHideScrollbar"
                     verticalScrollsHorizontally={true}
                 >
                     <RoomBreadcrumbs />
@@ -373,7 +373,7 @@ export default class LeftPanel extends React.Component<IProps, IState> {
         if (CallHandler.sharedInstance().getSupportsPstnProtocol()) {
             dialPadButton =
                 <AccessibleTooltipButton
-                    className={classNames("mx_LeftPanel_dialPadButton", {})}
+                    className={classNames("mx_TopPanel_dialPadButton", {})}
                     onClick={this.onDialPad}
                     title={_t("Open dial pad")}
                 />;
@@ -381,13 +381,13 @@ export default class LeftPanel extends React.Component<IProps, IState> {
 
         return (
             <div
-                className="mx_LeftPanel_filterContainer"
+                className="mx_TopPanel_filterContainer"
                 onFocus={this.onFocus}
                 onBlur={this.onBlur}
                 onKeyDown={this.onKeyDown}
             >
                 <RoomSearch
-                    isMinimized={this.props.isMinimized}
+                    isMinimized={!this.props.isMinimized}
                     onKeyDown={this.onKeyDown}
                     onSelectRoom={this.selectRoom}
                 />
@@ -395,14 +395,15 @@ export default class LeftPanel extends React.Component<IProps, IState> {
                 { dialPadButton }
 
                 <AccessibleTooltipButton
-                    className={classNames("mx_LeftPanel_exploreButton", {
-                        mx_LeftPanel_exploreButton_space: !!this.state.activeSpace,
+                    className={classNames("mx_TopPanel_exploreButton", {
+                        mx_TopPanel_exploreButton_space: !!this.state.activeSpace,
                     })}
                     onClick={this.onExplore}
                     title={this.state.activeSpace
                         ? _t("Explore %(spaceName)s", { spaceName: this.state.activeSpace.name })
                         : _t("Explore rooms")}
                 />
+                
             </div>
         );
     }
@@ -420,23 +421,22 @@ export default class LeftPanel extends React.Component<IProps, IState> {
         />;
 
         const containerClasses = classNames({
-            "mx_LeftPanel": true,
-            "mx_LeftPanel_minimized": this.props.isMinimized,
+            "mx_TopPanel": true,
+            "mx_TopPanel_minimized": this.props.isMinimized,
         });
 
         const roomListClasses = classNames(
-            "mx_LeftPanel_actualRoomListContainer",
+            "mx_TopPanel_actualRoomListContainer",
             "mx_AutoHideScrollbar",
         );
 
         return (
             <div className={containerClasses} ref={this.ref}>
-                <aside className="mx_LeftPanel_roomListContainer">
-                  {/*   { this.renderHeader() }
-                    { this.renderSearchDialExplore() }
-                    { this.renderBreadcrumbs() } */}
+                <aside className="mx_TopPanel_roomListContainer">
+                    { this.renderHeader() }
+                    {/* { this.renderBreadcrumbs() } */}
                     <RoomListNumResults onVisibilityChange={this.refreshStickyHeaders} />
-                    <div className="mx_LeftPanel_roomListWrapper">
+                    <div className="mx_TopPanel_roomListWrapper">
                         <div
                             className={roomListClasses}
                             ref={this.listContainerRef}
@@ -444,10 +444,11 @@ export default class LeftPanel extends React.Component<IProps, IState> {
                             // overflow:scroll;, so force it out of tab order.
                             tabIndex={-1}
                         >
-                            { roomList }
+                         {/*    { roomList } */}
                         </div>
                     </div>
                     { !this.props.isMinimized && <LeftPanelWidget /> }
+                    { this.renderSearchDialExplore() }
                 </aside>
             </div>
         );

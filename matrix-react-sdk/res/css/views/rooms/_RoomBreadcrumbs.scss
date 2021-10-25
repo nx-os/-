@@ -19,7 +19,7 @@ limitations under the License.
 
     // Create a flexbox for the crumbs
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: flex-start;
 
     .mx_RoomBreadcrumbs_crumb {
