@@ -55,6 +55,18 @@ import { RoomPermalinkCreator } from '../../utils/permalinks/Permalinks';
 import { E2EStatus } from '../../utils/ShieldUtils';
 import { dispatchShowThreadsPanelEvent } from '../../dispatcher/dispatch-actions/threads';
 import AuxPanel from "../views/rooms/AuxPanel";
+import RoomHeader from '../views/rooms/RoomHeader';
+import RoomHeaderButtons from '../views/right_panel/RoomHeaderButtons';
+import classNames from 'classnames';
+import { _t } from '../../languageHandler';
+import AccessibleTooltipButton from '../views/elements/AccessibleTooltipButton';
+import RoomName from '../views/elements/RoomName';
+import RoomTopic from '../views/elements/RoomTopic';
+import DecoratedRoomAvatar from '../views/avatars/DecoratedRoomAvatar';
+import SearchBar from '../views/rooms/SearchBar';
+import Modal from '../../Modal';
+import InfoDialog from '../views/dialogs/InfoDialog';
+import { PlaceCallType } from '../../CallHandler';
 
 
 interface IProps {
@@ -67,8 +79,8 @@ interface IProps {
 }
 
 interface IState {
-    // room?: Room; // if showing panels for a given room, this is set
-    showApps?: any;
+    room?: Room; // if showing panels for a given room, this is set
+    showApps?: boolean;
     phase: RightPanelPhases;
     isUserPrivilegedInGroup?: boolean;
     member?: RoomMember;
@@ -94,6 +106,7 @@ export default class RightPanel extends React.Component<IProps, IState> {
             phase: this.getPhaseFromProps(),
             isUserPrivilegedInGroup: null,
             member: this.getUserForPanel(),
+            showApps: true
         };
     }
 
@@ -247,6 +260,38 @@ export default class RightPanel extends React.Component<IProps, IState> {
             });
         }
     };
+    private onAppsClick = () => {
+        this.setState({
+            showApps: !this.state.showApps,
+        });
+    };
+    private displayInfoDialogAboutScreensharing() {
+        Modal.createDialog(InfoDialog, {
+            title: _t("Screen sharing is here!"),
+            description: _t("You can now share your screen by pressing the \"screen share\" " +
+                "button during a call. You can even do this in audio calls if both sides support it!"),
+        });
+    }
+
+
+    private onCallPlaced = (type: PlaceCallType) => {
+        dis.dispatch({
+            action: 'place_call',
+            type: type,
+            room_id: this.state.room.roomId,
+        });
+    };
+
+    //TODO
+
+    private onSearchClick = () => {
+        this.setState({
+            //        searching: !this.state.searching,
+        });
+        console.log('Neeeeeeeeew state');
+    };
+
+
 
     render() {
         let panel = <div />;
@@ -350,25 +395,109 @@ export default class RightPanel extends React.Component<IProps, IState> {
                 panel = <WidgetCard room={this.props.room} widgetId={this.state.widgetId} onClose={this.onClose} />;
                 break;
         }
+
         let aux = null;
+        let auxPanel = (<div></div>);
+        if (this.state.showApps) {
+            auxPanel = (
+                <AuxPanel
+                    room={this.props.room}
+                    userId={this.context.credentials.userId}
+                    //   showApps={this.state.showApps}
+                    resizeNotifier={this.props.resizeNotifier}
+                >
+                    {aux}
+                </AuxPanel>
+            )
+
+        } else {
+            auxPanel = (
+                <div></div>
+            )
+
+        }
 
 
-        const auxPanel = (
-            <AuxPanel
-                room={this.props.room}
-                userId={this.context.credentials.userId}
-                // showApps={this.state.showApps}
-                resizeNotifier={this.props.resizeNotifier}
-            >
-                {aux}
-            </AuxPanel>
-        );
+        ;
+        let searchInfo;
+        let oobName = _t("Join Room");
+        let settingsHint = false;
+        const textClasses = classNames('mx_RoomHeader_nametext', { mx_RoomHeader_settingsHint: settingsHint });
+        const name =
+            <div className="mx_RoomHeader_name" onClick={/* this.props.onSettingsClick */null}>
+                <RoomName room={this.props.room}>
+                    {(name) => {
+                        const roomName = name || oobName;
+                        return <div dir="auto" className={textClasses} title={roomName}>
+                            {roomName}
+                            {/*  {topicElement} */}
+                        </div>;
+                    }}
+                </RoomName>
+            </div>
+
+        const topicElement = <RoomTopic room={this.props.room}>
+            {(topic, ref) => <div className="mx_RoomHeader_topic" ref={ref} title={topic} dir="auto">
+                {topic}
+            </div>}
+        </RoomTopic>;
+
+        const buttons: JSX.Element[] = [];
+
+        if (SettingsStore.getValue("showCallButtonsInComposer")) {
+            const voiceCallButton = <AccessibleTooltipButton
+                className="mx_RoomHeader_button mx_RoomHeader_voiceCallButton"
+                onClick={() => this.onCallPlaced(PlaceCallType.Voice)}
+                title={_t("Voice call")}
+            />;
+            const videoCallButton = <AccessibleTooltipButton
+                className="mx_RoomHeader_button mx_RoomHeader_videoCallButton"
+                onClick={(ev: React.MouseEvent<Element>) => ev.shiftKey ?
+                    this.displayInfoDialogAboutScreensharing() : this.onCallPlaced(PlaceCallType.Video)}
+                title={_t("Video call")}
+            />;
+            buttons.push(voiceCallButton, videoCallButton);
+        }
+
+
+
+
+        if (this.onSearchClick) {
+            const searchButton = <AccessibleTooltipButton
+                className="mx_RoomHeader_button mx_RoomHeader_searchButton"
+                onClick={null}
+                title={_t("Search")}
+            />;
+            buttons.push(searchButton);
+        }
+
 
         return (
-                <aside className="mx_RightPanel dark-panel" id="mx_RightPanel">
-                    {auxPanel}
-                    {panel}
-                </aside>
+            <div className="mx_RightPanel dark-panel" id="mx_RightPanel">
+                <div className="mx_RoomHeader_wrapper" aria-owns="mx_RightPanel">
+                  {/*   <div className="mx_RoomHeader_avatar">
+                        <DecoratedRoomAvatar
+                            room={this.props.room}
+                            avatarSize={32}
+                            //oobData={this.props.oobData}
+                            viewAvatarOnClick={true}
+                        />
+                    </div> */}
+                  {/*   {name} */}
+                   {/*  {topicElement} */}
+                    {/*  {buttons}  */}
+                    <RoomHeaderButtons room={this.props.room} />
+                    <AccessibleTooltipButton
+                        className={classNames("mx_RoomHeader_button mx_RoomHeader_appsButton", {
+                            mx_RoomHeader_appsButton_highlight: true,
+                        })}
+                        onClick={this.onAppsClick}
+                        title={true ? _t("Hide Widgets") : _t("Show Widgets")}
+                    />
+                </div>
+                {auxPanel}
+                {panel}
+            </div>
         );
     }
 }

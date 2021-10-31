@@ -60,7 +60,7 @@ import RoomPreviewBar from "../views/rooms/RoomPreviewBar";
 import SearchBar, { SearchScope } from "../views/rooms/SearchBar";
 import RoomUpgradeWarningBar from "../views/rooms/RoomUpgradeWarningBar";
 import AuxPanel from "../views/rooms/AuxPanel";
-import RoomHeader from "../views/rooms/RoomHeader";
+//import RoomHeader from "../views/rooms/RoomHeader";
 import { XOR } from "../../@types/common";
 import { IOOBData, IThreepidInvite } from "../../stores/ThreepidInviteStore";
 import EffectsOverlay from "../views/elements/EffectsOverlay";
@@ -92,6 +92,7 @@ import SpaceStore from "../../stores/SpaceStore";
 
 import { logger } from "matrix-js-sdk/src/logger";
 import { EventTimeline } from 'matrix-js-sdk/src/models/event-timeline';
+import RoomHeader from '../views/rooms/RoomHeader';
 
 const DEBUG = false;
 let debuglog = function (msg: string) { };
@@ -228,7 +229,8 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             canPeek: false,
             showApps: false,
             isPeeking: false,
-            showRightPanel: RightPanelStore.getSharedInstance().isOpenForRoom,
+            // showRightPanel: RightPanelStore.getSharedInstance().isOpenForRoom,
+            showRightPanel: true,
             joining: false,
             atEndOfLiveTimeline: true,
             atEndOfLiveTimelineInit: false,
@@ -1438,24 +1440,24 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
         return ret;
     }
 
-    private onCallPlaced = (type: PlaceCallType) => {
-        dis.dispatch({
-            action: 'place_call',
-            type: type,
-            room_id: this.state.room.roomId,
-        });
-    };
+    /*   private onCallPlaced = (type: PlaceCallType) => {
+          dis.dispatch({
+              action: 'place_call',
+              type: type,
+              room_id: this.state.room.roomId,
+          });
+      }; */
 
-    private onSettingsClick = () => {
-        dis.dispatch({ action: "open_room_settings" });
-    };
+    /*    private onSettingsClick = () => {
+           dis.dispatch({ action: "open_room_settings" });
+       }; */
 
-    private onAppsClick = () => {
-        dis.dispatch({
-            action: "appsDrawer",
-            show: !this.state.showApps,
-        });
-    };
+    /*    private onAppsClick = () => {
+           dis.dispatch({
+               action: "appsDrawer",
+               show: !this.state.showApps,
+           });
+       }; */
 
     private onForgetClick = () => {
         dis.dispatch({
@@ -1534,6 +1536,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
         this.setState({
             searching: !this.state.searching,
         });
+        console.log('Neeeeeeeeew state');
     };
 
     private onCancelSearchClick = () => {
@@ -1920,16 +1923,16 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
             />;
         }
 
-        const auxPanel = (
-            <AuxPanel
-                room={this.state.room}
-                userId={this.context.credentials.userId}
-                showApps={this.state.showApps}
-                resizeNotifier={this.props.resizeNotifier}
-            >
-                {aux}
-            </AuxPanel>
-        );
+        //  const auxPanel = (
+        //      <AuxPanel
+        //          room={this.state.room}
+        //          userId={this.context.credentials.userId}
+        //          showApps={this.state.showApps}
+        //          resizeNotifier={this.props.resizeNotifier}
+        //      >
+        //       {/*  {aux} */}
+        //      </AuxPanel>
+        //  );
 
         let messageComposer; let searchInfo;
         const canSpeak = (
@@ -1998,6 +2001,8 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
 
         // console.info("ShowUrlPreview for %s is %s", this.state.room.roomId, this.state.showUrlPreview);
         const messagePanel = (
+
+
             <TimelinePanel
                 ref={this.gatherTimelinePanelRef}
                 timelineSet={this.state.room.getUnfilteredTimelineSet()}
@@ -2020,7 +2025,9 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
                 showReactions={true}
                 layout={this.state.layout}
                 editState={this.state.editState}
-            />);
+            />
+
+        );
 
         let topUnreadMessagesBar = null;
         // Do not show TopUnreadMessagesBar if we have search results showing, it makes no sense
@@ -2042,6 +2049,8 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
         const showRightPanel = this.state.room && this.state.showRightPanel;
         const rightPanel = showRightPanel
             ? <RightPanel
+                //TODO: hey 
+                //  onAppsClick={null}
                 room={this.state.room}
                 resizeNotifier={this.props.resizeNotifier}
                 permalinkCreator={this.getPermalinkCreatorForRoom(this.state.room)}
@@ -2058,6 +2067,7 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
 
         const showChatEffects = SettingsStore.getValue('showChatEffects');
 
+        //TODO
         return (
             <RoomContext.Provider value={this.state}>
                 <main className={mainClasses} ref={this.roomView} onKeyDown={this.onReactKeyDown}>
@@ -2065,25 +2075,39 @@ export class RoomView extends React.Component<IRoomProps, IRoomState> {
                         <EffectsOverlay roomWidth={this.roomView.current.offsetWidth} />
                     }
                     <ErrorBoundary>
-                        <RoomHeader
+                        {/*    <RoomHeader
                             room={this.state.room}
                             searchInfo={searchInfo}
                             oobData={this.props.oobData}
                             inRoom={myMembership === 'join'}
                             onSearchClick={this.onSearchClick}
-                            onSettingsClick={this.onSettingsClick}
+                            onSettingsClick={null}
                             onForgetClick={(myMembership === "leave") ? this.onForgetClick : null}
                             e2eStatus={this.state.e2eStatus}
-                            onAppsClick={this.state.hasPinnedWidgets ? this.onAppsClick : null}
+                            onAppsClick={null}
                             appsShown={this.state.showApps}
-                            onCallPlaced={this.onCallPlaced}
-                        />
+                            onCallPlaced={null}
+                        /> */}
                         <MainSplit panel={rightPanel} resizeNotifier={this.props.resizeNotifier}>
                             <div className="mx_RoomView_body">
                                 <div className={timelineClasses}>
                                     {fileDropTarget}
                                     {topUnreadMessagesBar}
                                     {jumpToBottom}
+                                    <RoomHeader
+                                        room={this.state.room}
+                                        searchInfo={searchInfo}
+                                        oobData={this.props.oobData}
+                                        inRoom={myMembership === 'join'}
+                                        onSearchClick={this.onSearchClick}
+                                        onSettingsClick={null}
+                                        onForgetClick={(myMembership === "leave") ? this.onForgetClick : null}
+                                        e2eStatus={this.state.e2eStatus}
+                                        onAppsClick={null}
+                                        appsShown={this.state.showApps}
+                                        onCallPlaced={null}
+                                    />
+                                    {aux}
                                     {messagePanel}
                                     {searchResultsPanel}
                                 </div>

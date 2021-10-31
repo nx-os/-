@@ -19,10 +19,13 @@ import React, { CSSProperties } from "react";
 interface IProps {
     backgroundImage?: string;
     blurMultiplier?: number;
+    rightNow: boolean;
 }
 
-export const BackdropPanel: React.FC<IProps> = ({ backgroundImage, blurMultiplier }) => {
+export const BackdropPanel: React.FC<IProps> = ({ backgroundImage, blurMultiplier, rightNow }) => {
     if (!backgroundImage) return null;
+    
+
 
     const styles: CSSProperties = {};
     if (blurMultiplier) {
@@ -34,11 +37,23 @@ export const BackdropPanel: React.FC<IProps> = ({ backgroundImage, blurMultiplie
             styles.filter = `blur(${parsed * blurMultiplier}px)`;
         }
     }
-    return <div className="mx_BackdropPanel">
-        <img
-            style={styles}
-            className="mx_BackdropPanel--image"
-            src={backgroundImage} />
-    </div>;
+    if (rightNow) {
+        return <div className="mx_RightBackdropPanel">
+            <img
+                style={styles}
+                className="mx_RightBackdropPanel--image"
+                src={backgroundImage} />
+        </div>;
+
+    } else {
+        return <div className="mx_BackdropPanel">
+            <img
+                style={styles}
+                className="mx_BackdropPanel--image"
+                src={backgroundImage} />
+        </div>;
+    }
+
+
 };
 export default BackdropPanel;

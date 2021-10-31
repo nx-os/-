@@ -40,6 +40,7 @@ import { replaceableComponent } from "../../utils/replaceableComponent";
 import SpaceStore, { UPDATE_SELECTED_SPACE } from "../../stores/SpaceStore";
 import { getKeyBindingsManager, RoomListAction } from "../../KeyBindingsManager";
 import UIStore from "../../stores/UIStore";
+import DecoratedRoomAvatar from "../views/avatars/DecoratedRoomAvatar";
 
 interface IProps {
     isMinimized: boolean;
@@ -80,7 +81,7 @@ export default class TopPanel extends React.Component<IProps, IState> {
         SpaceStore.instance.on(UPDATE_SELECTED_SPACE, this.updateActiveSpace);
     }
 
-    public componentDidMount() {
+  /*   public componentDidMount() {
         UIStore.instance.trackElementDimensions("LeftPanel", this.ref.current);
         UIStore.instance.trackElementDimensions("ListContainer", this.listContainerRef.current);
         UIStore.instance.on("ListContainer", this.refreshStickyHeaders);
@@ -102,7 +103,7 @@ export default class TopPanel extends React.Component<IProps, IState> {
         if (prevState.activeSpace !== this.state.activeSpace) {
             this.refreshStickyHeaders();
         }
-    }
+    } */
 
     private updateActiveSpace = (activeSpace: Room) => {
         this.setState({ activeSpace });
@@ -347,7 +348,7 @@ export default class TopPanel extends React.Component<IProps, IState> {
     private renderHeader(): React.ReactNode {
         return (
             <div className="mx_TopPanel_userHeader">
-                <UserMenu isMinimized={!this.props.isMinimized} />
+                <UserMenu isMinimized={this.props.isMinimized} />
             </div>
         );
     }
@@ -387,14 +388,14 @@ export default class TopPanel extends React.Component<IProps, IState> {
                 onKeyDown={this.onKeyDown}
             >
                 <RoomSearch
-                    isMinimized={!this.props.isMinimized}
+                    isMinimized={this.props.isMinimized}
                     onKeyDown={this.onKeyDown}
                     onSelectRoom={this.selectRoom}
                 />
 
                 { dialPadButton }
 
-                <AccessibleTooltipButton
+                {/* <AccessibleTooltipButton
                     className={classNames("mx_TopPanel_exploreButton", {
                         mx_TopPanel_exploreButton_space: !!this.state.activeSpace,
                     })}
@@ -402,14 +403,14 @@ export default class TopPanel extends React.Component<IProps, IState> {
                     title={this.state.activeSpace
                         ? _t("Explore %(spaceName)s", { spaceName: this.state.activeSpace.name })
                         : _t("Explore rooms")}
-                />
+                /> */}
                 
             </div>
         );
     }
 
     public render(): React.ReactNode {
-        const roomList = <RoomList
+    /*     const roomList = <RoomList
             onKeyDown={this.onKeyDown}
             resizeNotifier={this.props.resizeNotifier}
             onFocus={this.onFocus}
@@ -420,37 +421,36 @@ export default class TopPanel extends React.Component<IProps, IState> {
             onListCollapse={this.refreshStickyHeaders}
         />;
 
+      
+        const roomListClasses = classNames(
+            "mx_TopPanel_actualRoomListContainer",
+            "mx_AutoHideScrollbar",
+        ); */
+
         const containerClasses = classNames({
             "mx_TopPanel": true,
             "mx_TopPanel_minimized": this.props.isMinimized,
         });
 
-        const roomListClasses = classNames(
-            "mx_TopPanel_actualRoomListContainer",
-            "mx_AutoHideScrollbar",
-        );
 
         return (
             <div className={containerClasses} ref={this.ref}>
                 <aside className="mx_TopPanel_roomListContainer">
                     { this.renderHeader() }
                     {/* { this.renderBreadcrumbs() } */}
-                    <RoomListNumResults onVisibilityChange={this.refreshStickyHeaders} />
-                    <div className="mx_TopPanel_roomListWrapper">
-                        <div
-                            className={roomListClasses}
-                            ref={this.listContainerRef}
-                            // Firefox sometimes makes this element focusable due to
-                            // overflow:scroll;, so force it out of tab order.
-                            tabIndex={-1}
-                        >
-                         {/*    { roomList } */}
-                        </div>
-                    </div>
-                    { !this.props.isMinimized && <LeftPanelWidget /> }
+                   {/*  <div className="mx_RoomHeader_avatar">
+                        <DecoratedRoomAvatar
+                            room={this.state.activeSpace}
+                            avatarSize={32}
+                            //oobData={this.props.oobData}
+                            viewAvatarOnClick={true}
+                        />
+                    </div> */}
                     { this.renderSearchDialExplore() }
                 </aside>
             </div>
         );
     }
 }
+
+

@@ -33,6 +33,8 @@ import MatrixClientContext from "../../contexts/MatrixClientContext";
 import MiniAvatarUploader, { AVATAR_SIZE } from "../views/elements/MiniAvatarUploader";
 import Analytics from "../../Analytics";
 import CountlyAnalytics from "../../CountlyAnalytics";
+import Editor from "rich-markdown-editor";
+
 
 const onClickSendDm = () => {
     Analytics.trackEvent('home_page', 'button', 'dm');
@@ -86,8 +88,8 @@ const UserWelcomeTop = () => {
             />
         </MiniAvatarUploader>
 
-        <h1>{ _t("Welcome %(name)s", { name: ownProfile.displayName }) }</h1>
-        <h4>{ _t("Now, let's help you get started") }</h4>
+        <h1>{_t("Welcome %(name)s", { name: ownProfile.displayName })}</h1>
+        <h4>{_t("Now, let's help you get started")}</h4>
     </div>;
 };
 
@@ -113,25 +115,29 @@ const HomePage: React.FC<IProps> = ({ justRegistered = false }) => {
 
         introSection = <React.Fragment>
             <img src={logoUrl} alt={config.brand} />
-            <h1>{ _t("Welcome to %(appName)s", { appName: config.brand }) }</h1>
-            <h4>{ _t("Liberate your communication") }</h4>
+            <h1>{_t("Welcome to %(appName)s", { appName: config.brand })}</h1>
+            <h4>{_t("Liberate your communication")}</h4>
         </React.Fragment>;
     }
 
     return <AutoHideScrollbar className="mx_HomePage mx_HomePage_default">
         <div className="mx_HomePage_default_wrapper">
-            { introSection }
-            <div className="mx_HomePage_default_buttons">
+            {introSection}
+            <Editor
+        //        dark={true}
+            //defaultValue="Hello world!"
+            />
+            {/*      <div className="mx_HomePage_default_buttons">
                 <AccessibleButton onClick={onClickSendDm} className="mx_HomePage_button_sendDm">
-                    { _t("Send a Direct Message") }
+                    {_t("Send a Direct Message")}
                 </AccessibleButton>
                 <AccessibleButton onClick={onClickExplore} className="mx_HomePage_button_explore">
-                    { _t("Explore Public Rooms") }
+                    {_t("Explore Public Rooms")}
                 </AccessibleButton>
                 <AccessibleButton onClick={onClickNewRoom} className="mx_HomePage_button_createGroup">
-                    { _t("Create a Group Chat") }
+                    {_t("Create a Group Chat")}
                 </AccessibleButton>
-            </div>
+            </div> */}
         </div>
     </AutoHideScrollbar>;
 };

@@ -118,6 +118,8 @@ export default class RoomAvatar extends React.Component<IProps, IState> {
         return Avatar.avatarUrlForRoom(props.room, props.width, props.height, props.resizeMethod);
     }
 
+    //TODO AHA
+
     private onRoomAvatarClick = () => {
         const avatarUrl = Avatar.avatarUrlForRoom(
             this.props.room,

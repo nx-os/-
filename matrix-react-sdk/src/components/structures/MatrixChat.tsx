@@ -1319,6 +1319,7 @@ export default class MatrixChat extends React.PureComponent<IProps, IState> {
             } else {
                 // The user has just logged in after registering,
                 // so show the homepage.
+                //TODO
                 dis.dispatch({ action: 'view_home_page', justRegistered: true });
             }
         } else {

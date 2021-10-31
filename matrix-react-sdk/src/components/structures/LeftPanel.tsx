@@ -40,6 +40,10 @@ import { replaceableComponent } from "../../utils/replaceableComponent";
 import SpaceStore, { UPDATE_SELECTED_SPACE } from "../../stores/SpaceStore";
 import { getKeyBindingsManager, RoomListAction } from "../../KeyBindingsManager";
 import UIStore from "../../stores/UIStore";
+import SpaceMenu from "./SpaceMenu";
+import AccessibleButton from "../views/elements/AccessibleButton";
+import { DefaultTagID } from "../../stores/room-list/models";
+import { on } from "events";
 
 interface IProps {
     isMinimized: boolean;
@@ -347,6 +351,14 @@ export default class LeftPanel extends React.Component<IProps, IState> {
     private renderHeader(): React.ReactNode {
         return (
             <div className="mx_LeftPanel_userHeader">
+                <SpaceMenu isMinimized={this.props.isMinimized} />
+            </div>
+        );
+    }
+
+    private renderFooter(): React.ReactNode {
+        return (
+            <div className="mx_LeftPanel_userHeader">
                 <UserMenu isMinimized={this.props.isMinimized} />
             </div>
         );
@@ -386,14 +398,13 @@ export default class LeftPanel extends React.Component<IProps, IState> {
                 onBlur={this.onBlur}
                 onKeyDown={this.onKeyDown}
             >
-                <RoomSearch
+                {/*    <RoomSearch
                     isMinimized={this.props.isMinimized}
                     onKeyDown={this.onKeyDown}
                     onSelectRoom={this.selectRoom}
-                />
+                /> */}
 
-                { dialPadButton }
-
+                {/*  { dialPadButton } */}
                 <AccessibleTooltipButton
                     className={classNames("mx_LeftPanel_exploreButton", {
                         mx_LeftPanel_exploreButton_space: !!this.state.activeSpace,
@@ -406,6 +417,11 @@ export default class LeftPanel extends React.Component<IProps, IState> {
             </div>
         );
     }
+
+    private onStartChat = () => {
+        const initialText = RoomListStore.instance.getFirstNameFilterCondition()?.search;
+        dis.dispatch({ action: "view_create_chat", initialText });
+    };
 
     public render(): React.ReactNode {
         const roomList = <RoomList
@@ -428,13 +444,60 @@ export default class LeftPanel extends React.Component<IProps, IState> {
             "mx_LeftPanel_actualRoomListContainer",
             "mx_AutoHideScrollbar",
         );
+        //TODO
 
+        let explorePrompt: JSX.Element;
+        if (!this.props.isMinimized) {
+            if (!this.state.activeSpace) {
+                explorePrompt = <div className="mx_RoomList_explorePrompt">
+                    <div>{"Dashboard"}</div>
+                    <AccessibleButton
+                        className="mx_RoomList_explorePrompt_startChat"
+                        kind="link"
+                        onClick={this.onStartChat}
+                    >
+                        {_t("Start a new chat")}
+                    </AccessibleButton>
+                    <AccessibleButton
+                        className="mx_RoomList_explorePrompt_explore"
+                        kind="link"
+                        onClick={this.onExplore}
+                    >
+                        {this.state.activeSpace ? _t("Explore rooms") : _t("Explore all public rooms")}
+                    </AccessibleButton>
+                </div>;
+            } else if (true
+                //         this.state.activeSpace?.canInvite(userId) ||
+                //          this.state.activeSpace?.getMyMembership() === "join" ||
+                //            this.state.activeSpace?.getJoinRule() === JoinRule.Public 
+            ) {
+                const spaceName = this.state.activeSpace.name;
+                /*    const canInvite = this.state.activeSpace?.canInvite(userId) ||
+                       this.state.activeSpace?.getJoinRule() === JoinRule.Public; */
+                explorePrompt = <div className="mx_RoomList_explorePrompt">
+                    <div>{_t("Quick actions")}</div>
+                    {true && <AccessibleTooltipButton
+                        className="mx_RoomList_explorePrompt_spaceInvite"
+                        onClick={null}
+                        title={_t("Invite to %(spaceName)s", { spaceName })}
+                    >
+                        {_t("Invite people")}
+                    </AccessibleTooltipButton>}
+                    {this.state.activeSpace?.getMyMembership() === "join" && <AccessibleTooltipButton
+                        className="mx_RoomList_explorePrompt_spaceExplore"
+                        onClick={this.onExplore}
+                        title={_t("Explore %(spaceName)s", { spaceName })}
+                    >
+                        {_t("Explore rooms")}
+                    </AccessibleTooltipButton>}
+                </div>;
+            }
+        }
         return (
             <div className={containerClasses} ref={this.ref}>
                 <aside className="mx_LeftPanel_roomListContainer">
-                  {/*   { this.renderHeader() }
-                    { this.renderSearchDialExplore() }
-                    { this.renderBreadcrumbs() } */}
+                    {/* {this.renderHeader()} */}
+                    {/*         { this.renderBreadcrumbs() } */}
                     <RoomListNumResults onVisibilityChange={this.refreshStickyHeaders} />
                     <div className="mx_LeftPanel_roomListWrapper">
                         <div
@@ -444,10 +507,14 @@ export default class LeftPanel extends React.Component<IProps, IState> {
                             // overflow:scroll;, so force it out of tab order.
                             tabIndex={-1}
                         >
-                            { roomList }
+                            {roomList}
                         </div>
                     </div>
-                    { !this.props.isMinimized && <LeftPanelWidget /> }
+                    {/*  { !this.props.isMinimized && <LeftPanelWidget /> } */}
+                    {<LeftPanelWidget />}
+                    {/*         {this.renderSearchDialExplore()} */}
+                    {explorePrompt}
+                    {this.renderFooter()}
                 </aside>
             </div>
         );

@@ -514,6 +514,7 @@ class LoggedInView extends React.Component<IProps, IState> {
             case NavigationAction.GoToHome:
                 dis.dispatch({
                     action: 'view_home_page',
+                    //     justRegistered: true 
                 });
                 Modal.closeCurrentModal("homeKeyboardShortcut");
                 handled = true;
@@ -661,39 +662,41 @@ class LoggedInView extends React.Component<IProps, IState> {
 
         return (
             <MatrixClientContext.Provider value={this._matrixClient}>
-                <TopPanel
-                            isMinimized={this.props.collapseLhs || false}
-                            resizeNotifier={this.props.resizeNotifier}
-                        />
+                {/*  <TopPanel
+                                isMinimized={this.props.collapseLhs || false}
+                                resizeNotifier={this.props.resizeNotifier}
+                            /> */}
                 <div
                     onPaste={this.onPaste}
                     onKeyDown={this.onReactKeyDown}
                     className={wrapperClasses}
                     aria-hidden={this.props.hideToSRUsers}
                 >
-                    
                     <ToastContainer />
                     <div className={bodyClasses}>
                         <div className='mx_LeftPanel_wrapper'>
-                            { SettingsStore.getValue('TagPanel.enableTagPanel') &&
+                            {SettingsStore.getValue('TagPanel.enableTagPanel') &&
                                 (<div className="mx_GroupFilterPanelContainer">
                                     <BackdropPanel
                                         blurMultiplier={0.5}
                                         backgroundImage={this.state.backgroundImage}
+                                        rightNow={false}
                                     />
                                     <GroupFilterPanel />
-                                    { SettingsStore.getValue("feature_custom_tags") ? <CustomRoomTagPanel /> : null }
+                                    {SettingsStore.getValue("feature_custom_tags") ? <CustomRoomTagPanel /> : null}
                                 </div>)
                             }
-                            { SpaceStore.spacesEnabled ? <>
+                            {SpaceStore.spacesEnabled ? <>
                                 <BackdropPanel
                                     blurMultiplier={0.5}
                                     backgroundImage={this.state.backgroundImage}
+                                    rightNow={false}
                                 />
-                                <SpacePanel />
-                            </> : null }
+                                {/* { <SpacePanel />} */}
+                            </> : null}
                             <BackdropPanel
                                 backgroundImage={this.state.backgroundImage}
+                                rightNow={false}
                             />
                             <div
                                 className="mx_LeftPanel_wrapper--user"
@@ -708,18 +711,19 @@ class LoggedInView extends React.Component<IProps, IState> {
                         </div>
                         <ResizeHandle passRef={this.resizeHandler} id="lp-resizer" />
                         <div className="mx_RoomView_wrapper">
-                            { pageElement }
+                            {pageElement}
                         </div>
                         <UserPanel
                             isMinimized={this.props.collapseLhs || true}
                             resizeNotifier={this.props.resizeNotifier}
+                            bgImage={this.state.backgroundImage}
                         />
                     </div>
                 </div>
                 <CallContainer />
                 <NonUrgentToastContainer />
                 <HostSignupContainer />
-                { audioFeedArraysForCalls }
+                {audioFeedArraysForCalls}
             </MatrixClientContext.Provider>
         );
     }

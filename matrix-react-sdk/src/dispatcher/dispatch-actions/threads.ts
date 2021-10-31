@@ -33,6 +33,7 @@ export const dispatchShowThreadsPanelEvent = () => {
     dis.dispatch<SetRightPanelPhasePayload>({
         action: Action.SetRightPanelPhase,
         phase: RightPanelPhases.ThreadPanel,
+        allowClose:false
     });
 };
 

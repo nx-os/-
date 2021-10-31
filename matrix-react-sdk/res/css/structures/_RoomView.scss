@@ -193,6 +193,8 @@ limitations under the License.
     height: 1px;
 }
 
+
+//TODO
 .mx_RoomView_messageListWrapper {
     min-height: 100%;
 
@@ -224,7 +226,7 @@ limitations under the License.
 
 .mx_RoomView_MessageList {
     list-style-type: none;
-    padding: 18px;
+    padding: 3px;
     margin: 0;
     /* needed as min-height is set to clientHeight in ScrollPanel
     to prevent shrinking when WhoIsTypingTile is hidden */

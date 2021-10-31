@@ -366,10 +366,10 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
         }
     };
 
-    private onStartChat = () => {
+/*     private onStartChat = () => {
         const initialText = RoomListStore.instance.getFirstNameFilterCondition()?.search;
         dis.dispatch({ action: "view_create_chat", initialText });
-    };
+    }; */
 
     private onExplore = () => {
         const initialText = RoomListStore.instance.getFirstNameFilterCondition()?.search;
@@ -483,7 +483,27 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
                     ? customTagAesthetics(orderedTagId)
                     : TAG_AESTHETICS[orderedTagId];
                 if (!aesthetics) throw new Error(`Tag ${orderedTagId} does not have aesthetics`);
-                if (orderedTagId == 'im.vector.fake.direct'){
+                //TODO 
+
+
+                if (orderedTagId == 'im.vector.fake.recent') {
+                    return
+                }
+                if (orderedTagId == 'm.lowpriority') {
+                    return
+                }
+                if (orderedTagId == 'im.vector.fake.archived') {
+                    return
+                }
+                if (orderedTagId == 'im.vector.fake.suggested') {
+                    return
+                }
+
+                if (orderedTagId == 'im.vector.fake.invite') {
+                    return
+                }
+
+                if (orderedTagId == 'm.server_notice') {
                     return
                 }
 
@@ -512,24 +532,24 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
         const cli = MatrixClientPeg.get();
         const userId = cli.getUserId();
 
-        let explorePrompt: JSX.Element;
+       /*  let explorePrompt: JSX.Element;
         if (!this.props.isMinimized) {
             if (this.state.isNameFiltering) {
                 explorePrompt = <div className="mx_RoomList_explorePrompt">
-                    <div>{ _t("Can't see what you’re looking for?") }</div>
+                    <div>{_t("Can't see what you’re looking for?")}</div>
                     <AccessibleButton
                         className="mx_RoomList_explorePrompt_startChat"
                         kind="link"
                         onClick={this.onStartChat}
                     >
-                        { _t("Start a new chat") }
+                        {_t("Start a new chat")}
                     </AccessibleButton>
                     <AccessibleButton
                         className="mx_RoomList_explorePrompt_explore"
                         kind="link"
                         onClick={this.onExplore}
                     >
-                        { this.props.activeSpace ? _t("Explore rooms") : _t("Explore all public rooms") }
+                        {this.props.activeSpace ? _t("Explore rooms") : _t("Explore all public rooms")}
                     </AccessibleButton>
                 </div>;
             } else if (
@@ -541,21 +561,21 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
                 const canInvite = this.props.activeSpace?.canInvite(userId) ||
                     this.props.activeSpace?.getJoinRule() === JoinRule.Public;
                 explorePrompt = <div className="mx_RoomList_explorePrompt">
-                    <div>{ _t("Quick actions") }</div>
-                    { canInvite && <AccessibleTooltipButton
+                    <div>{_t("Quick actions")}</div>
+                    {canInvite && <AccessibleTooltipButton
                         className="mx_RoomList_explorePrompt_spaceInvite"
                         onClick={this.onSpaceInviteClick}
                         title={_t("Invite to %(spaceName)s", { spaceName })}
                     >
-                        { _t("Invite people") }
-                    </AccessibleTooltipButton> }
-                    { this.props.activeSpace?.getMyMembership() === "join" && <AccessibleTooltipButton
+                        {_t("Invite people")}
+                    </AccessibleTooltipButton>}
+                    {this.props.activeSpace?.getMyMembership() === "join" && <AccessibleTooltipButton
                         className="mx_RoomList_explorePrompt_spaceExplore"
                         onClick={this.onExplore}
                         title={_t("Explore %(spaceName)s", { spaceName })}
                     >
-                        { _t("Explore rooms") }
-                    </AccessibleTooltipButton> }
+                        {_t("Explore rooms")}
+                    </AccessibleTooltipButton>}
                 </div>;
             } else if (Object.values(this.state.sublists).some(list => list.length > 0)) {
                 const unfilteredLists = RoomListStore.instance.unfilteredLists;
@@ -565,30 +585,30 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
                 // show a prompt to join/create rooms if the user is in 0 rooms and no historical
                 if (unfilteredRooms.length < 1 && unfilteredHistorical.length < 1 && unfilteredFavourite.length < 1) {
                     explorePrompt = <div className="mx_RoomList_explorePrompt">
-                        <div>{ _t("Use the + to make a new room or explore existing ones below") }</div>
+                        <div>{_t("Use the + to make a new room or explore existing ones below")}</div>
                         <AccessibleButton
                             className="mx_RoomList_explorePrompt_startChat"
                             kind="link"
                             onClick={this.onStartChat}
                         >
-                            { _t("Start a new chat") }
+                            {_t("Start a new chat")}
                         </AccessibleButton>
                         <AccessibleButton
                             className="mx_RoomList_explorePrompt_explore"
                             kind="link"
                             onClick={this.onExplore}
                         >
-                            { _t("Explore all public rooms") }
+                            {_t("Explore all public rooms")}
                         </AccessibleButton>
                     </div>;
                 }
             }
-        }
+        } */
 
         const sublists = this.renderSublists();
         return (
             <RovingTabIndexProvider handleHomeEnd={true} onKeyDown={this.props.onKeyDown}>
-                { ({ onKeyDownHandler }) => (
+                {({ onKeyDownHandler }) => (
                     <div
                         onFocus={this.props.onFocus}
                         onBlur={this.props.onBlur}
@@ -597,10 +617,10 @@ export default class RoomList extends React.PureComponent<IProps, IState> {
                         role="tree"
                         aria-label={_t("Rooms")}
                     >
-                        { sublists }
-                        { explorePrompt }
+                        {sublists}
+                       {/*  {explorePrompt} */}
                     </div>
-                ) }
+                )}
             </RovingTabIndexProvider>
         );
     }

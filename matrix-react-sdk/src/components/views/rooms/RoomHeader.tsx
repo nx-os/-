@@ -51,7 +51,7 @@ interface IProps {
     onSearchClick: () => void;
     onForgetClick: () => void;
     onCallPlaced: (type: PlaceCallType) => void;
-    onAppsClick: () => void;
+    onAppsClick?: () => void;
     e2eStatus: E2EStatus;
     appsShown: boolean;
     searchInfo: ISearchInfo;
@@ -93,7 +93,7 @@ export default class RoomHeader extends React.Component<IProps> {
         Modal.createDialog(InfoDialog, {
             title: _t("Screen sharing is here!"),
             description: _t("You can now share your screen by pressing the \"screen share\" " +
-            "button during a call. You can even do this in audio calls if both sides support it!"),
+                "button during a call. You can even do this in audio calls if both sides support it!"),
         });
     }
 
@@ -106,7 +106,7 @@ export default class RoomHeader extends React.Component<IProps> {
             this.props.searchInfo.searchCount !== undefined &&
             this.props.searchInfo.searchCount !== null) {
             searchStatus = <div className="mx_RoomHeader_searchStatus">&nbsp;
-                { _t("(~%(count)s results)", { count: this.props.searchInfo.searchCount }) }
+                {_t("(~%(count)s results)", { count: this.props.searchInfo.searchCount })}
             </div>;
         }
 
@@ -131,18 +131,21 @@ export default class RoomHeader extends React.Component<IProps> {
         const name =
             <div className="mx_RoomHeader_name" onClick={this.props.onSettingsClick}>
                 <RoomName room={this.props.room}>
-                    { (name) => {
+                    {(name) => {
                         const roomName = name || oobName;
-                        return <div dir="auto" className={textClasses} title={roomName}>{ roomName }</div>;
-                    } }
+                        return <div dir="auto" className={textClasses} title={roomName}>
+                            {roomName}
+                            {topicElement}
+                        </div>;
+                    }}
                 </RoomName>
-                { searchStatus }
+                {searchStatus}
             </div>;
 
         const topicElement = <RoomTopic room={this.props.room}>
-            { (topic, ref) => <div className="mx_RoomHeader_topic" ref={ref} title={topic} dir="auto">
-                { topic }
-            </div> }
+            {(topic, ref) => <div className="mx_RoomHeader_topic" ref={ref} title={topic} dir="auto">
+                {topic}
+            </div>}
         </RoomTopic>;
 
         let roomAvatar;
@@ -180,17 +183,17 @@ export default class RoomHeader extends React.Component<IProps> {
             />;
             buttons.push(forgetButton);
         }
-
-        if (this.props.onAppsClick) {
-            const appsButton = <AccessibleTooltipButton
-                className={classNames("mx_RoomHeader_button mx_RoomHeader_appsButton", {
-                    mx_RoomHeader_appsButton_highlight: this.props.appsShown,
-                })}
-                onClick={this.props.onAppsClick}
-                title={this.props.appsShown ? _t("Hide Widgets") : _t("Show Widgets")}
-            />;
-            buttons.push(appsButton);
-        }
+        /* 
+                if (this.props.onAppsClick) {
+                    const appsButton = <AccessibleTooltipButton
+                        className={classNames("mx_RoomHeader_button mx_RoomHeader_appsButton", {
+                            mx_RoomHeader_appsButton_highlight: this.props.appsShown,
+                        })}
+                        onClick={this.props.onAppsClick}
+                        title={this.props.appsShown ? _t("Hide Widgets") : _t("Show Widgets")}
+                    />;
+                    buttons.push(appsButton);
+                } */
 
         if (this.props.onSearchClick && this.props.inRoom) {
             const searchButton = <AccessibleTooltipButton
@@ -203,7 +206,7 @@ export default class RoomHeader extends React.Component<IProps> {
 
         const rightRow =
             <div className="mx_RoomHeader_buttons">
-                { buttons }
+                {buttons}
             </div>;
 
         const e2eIcon = this.props.e2eStatus ? <E2EIcon status={this.props.e2eStatus} /> : undefined;
@@ -211,12 +214,13 @@ export default class RoomHeader extends React.Component<IProps> {
         return (
             <div className="mx_RoomHeader light-panel">
                 <div className="mx_RoomHeader_wrapper" aria-owns="mx_RightPanel">
-                    <div className="mx_RoomHeader_avatar">{ roomAvatar }</div>
-                    <div className="mx_RoomHeader_e2eIcon">{ e2eIcon }</div>
-                    { name }
-                    { topicElement }
-                    { rightRow }
-                    <RoomHeaderButtons room={this.props.room} />
+                    {<div className="mx_RoomHeader_avatar">{roomAvatar}</div>}
+                    {/*  {topicElement} */}
+                    {name}
+                    {/*  {buttons} */}
+                    {rightRow}
+                    {/*  <div className="mx_RoomHeader_e2eIcon">{e2eIcon}</div> */}
+                    {/* {<RoomHeaderButtons room={this.props.room} />} */}
                 </div>
             </div>
         );

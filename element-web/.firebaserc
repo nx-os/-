@@ -1,0 +1,17 @@
+{
+  "projects": {
+    "default": "xnode-d8016"
+  },
+  "targets": {
+    "xnode-d8016": {
+      "hosting": {
+        "app": [
+          "new-app"
+        ],
+        "nx": [
+          "node-x"
+        ]
+      }
+    }
+  }
+}

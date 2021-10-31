@@ -25,6 +25,7 @@ import { Key } from "../../Keyboard";
 import { Writeable } from "../../@types/common";
 import { replaceableComponent } from "../../utils/replaceableComponent";
 import UIStore from "../../stores/UIStore";
+import SpacePanel from "../views/spaces/SpacePanel";
 
 // Shamelessly ripped off Modal.js.  There's probably a better way
 // of doing reusable widgets like dialog boxes & menus where we go and
@@ -412,6 +413,7 @@ export class ContextMenu extends React.PureComponent<IProps, IState> {
                     role={this.props.managed ? "menu" : undefined}
                 >
                     { body }
+              {/*       {<SpacePanel />} */}
                 </div>
                 { background }
             </div>

@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-$left-gutter: 64px;
+$left-gutter: 41px;
 $hover-select-border: 4px;
 
 .mx_EventTile:not([data-layout=bubble]) {
@@ -101,6 +101,7 @@ $hover-select-border: 4px;
 
     .mx_EventTile_line, .mx_EventTile_reply {
         position: relative;
+       // padding-left: $left-gutter;
         padding-left: $left-gutter;
         border-radius: 8px;
     }
@@ -287,7 +288,7 @@ $hover-select-border: 4px;
 .mx_EventTile_content {
     overflow-y: hidden;
     overflow-x: hidden;
-    margin-right: 34px;
+    margin-right: 3px;
 }
 
 /* Spoiler stuff */
@@ -313,7 +314,7 @@ $hover-select-border: 4px;
     .mx_EventTile[data-layout=group] {
         .mx_EventTile_line {
             /* ideally should be 100px, but 95px gives us a max thumbnail size of 800x600, which is nice */
-            margin-right: 110px;
+            margin-right: 3px;
         }
     }
     // on ELS we need the margin to allow interaction with the expand/collapse button which is normally in the RR gutter
@@ -690,7 +691,7 @@ $hover-select-border: 4px;
     color: $secondary-content;
     box-sizing: border-box;
     justify-content: flex-start;
-    margin-right: 110px;
+    margin-right: 3px;
     margin-left: 64px;
 
     &:hover, &-active {

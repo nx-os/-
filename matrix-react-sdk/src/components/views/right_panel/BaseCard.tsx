@@ -85,12 +85,13 @@ const BaseCard: React.FC<IProps> = ({
             { children }
         </AutoHideScrollbar>;
     }
+    //TODO:
 
     return (
         <div className={classNames("mx_BaseCard", className)}>
             <div className="mx_BaseCard_header">
                 { backButton }
-                { closeButton }
+                {/* { closeButton } */}
                 { header }
             </div>
             { children }

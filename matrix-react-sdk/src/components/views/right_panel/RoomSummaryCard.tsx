@@ -272,7 +272,7 @@ const RoomSummaryCard: React.FC<IProps> = ({ room, onClose }) => {
     </React.Fragment>;
 
     const memberCount = useRoomMemberCount(room);
-
+//TODO mashi 
     return <BaseCard header={header} className="mx_RoomSummaryCard" /* onClose={onClose} */>
 
         {SettingsStore.getValue(UIFeature.Widgets) && <AppsSection room={room} />}

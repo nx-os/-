@@ -74,6 +74,7 @@ export default abstract class HeaderButtons<P = {}> extends React.Component<IPro
             action: Action.SetRightPanelPhase,
             phase: phase,
             refireParams: extras,
+            allowClose:false,
         });
     }
 

@@ -1297,6 +1297,7 @@ export default class EventTile extends React.Component<IProps, IState> {
                         />) : null;
                 const isOwnEvent = this.props.mxEvent?.sender?.userId === MatrixClientPeg.get().getUserId();
 
+                //TODO:sdasienf
                 // tab-index=-1 to allow it to be focusable but do not add tab stop for it, primarily for screen readers
                 return (
                     React.createElement(this.props.as || "li", {

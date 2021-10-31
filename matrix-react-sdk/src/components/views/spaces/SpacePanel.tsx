@@ -53,6 +53,7 @@ import IconizedContextMenu, {
 import SettingsStore from "../../../settings/SettingsStore";
 import { SettingLevel } from "../../../settings/SettingLevel";
 import UIStore from "../../../stores/UIStore";
+import defaultDispatcher from "../../../dispatcher/dispatcher";
 
 const useSpaces = (): [Room[], Room[], Room | null] => {
     const invites = useEventEmitterState<Room[]>(SpaceStore.instance, UPDATE_INVITED_SPACES, () => {
@@ -73,6 +74,8 @@ interface IInnerSpacePanelProps {
     setPanelCollapsed: Dispatch<SetStateAction<boolean>>;
 }
 
+
+
 const HomeButtonContextMenu = ({ onFinished, ...props }: ComponentProps<typeof SpaceContextMenu>) => {
     const allRoomsInHome = useEventEmitterState(SpaceStore.instance, UPDATE_HOME_BEHAVIOUR, () => {
         return SpaceStore.instance.allRoomsInHome;
@@ -85,13 +88,13 @@ const HomeButtonContextMenu = ({ onFinished, ...props }: ComponentProps<typeof S
         compact
     >
         <div className="mx_SpacePanel_contextMenu_header">
-            { _t("Home") }
+            {_t("Home")}
         </div>
         <IconizedContextMenuOptionList first>
             <IconizedContextMenuCheckbox
                 iconClassName="mx_SpacePanel_noIcon"
                 label={_t("Show all rooms")}
-                active={allRoomsInHome}
+                active={false}
                 onClick={() => {
                     SettingsStore.setValue("Spaces.allRoomsInHome", null, SettingLevel.ACCOUNT, !allRoomsInHome);
                 }}
@@ -110,6 +113,13 @@ const HomeButton = ({ selected, isPanelCollapsed }: IHomeButtonProps) => {
         return SpaceStore.instance.allRoomsInHome;
     });
 
+    //TODO
+
+    var onHome = () => {
+        SpaceStore.instance.setActiveSpace(null)
+     //   defaultDispatcher.dispatch({ action: 'view_home_page' })
+    };
+
     return <li
         className={classNames("mx_SpaceItem", {
             "collapsed": isPanelCollapsed,
@@ -118,14 +128,17 @@ const HomeButton = ({ selected, isPanelCollapsed }: IHomeButtonProps) => {
     >
         <SpaceButton
             className="mx_SpaceButton_home"
-            onClick={() => SpaceStore.instance.setActiveSpace(null)}
+            //TODO haaa
+            //onClick={() => SpaceStore.instance.setActiveSpace(null)}
+            onClick={onHome}
+            //  onClick={()=> defaultDispatcher.dispatch({ action: 'view_home_page'})}
             selected={selected}
             label={allRoomsInHome ? _t("All rooms") : _t("Home")}
             notificationState={allRoomsInHome
                 ? RoomNotificationStateStore.instance.globalState
                 : SpaceStore.instance.getNotificationState(HOME_SPACE)}
             isNarrow={isPanelCollapsed}
-            ContextMenuComponent={HomeButtonContextMenu}
+            //  ContextMenuComponent={HomeButtonContextMenu}
             contextMenuTooltip={_t("Options")}
         />
     </li>;
@@ -176,9 +189,9 @@ const CreateSpaceButton = ({
             onClick={onNewClick}
             isNarrow={isPanelCollapsed}
         />
-        { betaDot }
+        {betaDot}
 
-        { contextMenu }
+        {contextMenu}
     </li>;
 };
 
@@ -189,7 +202,7 @@ const InnerSpacePanel = React.memo<IInnerSpacePanelProps>(({ children, isPanelCo
 
     return <div className="mx_SpaceTreeLevel">
         <HomeButton selected={!activeSpace} isPanelCollapsed={isPanelCollapsed} />
-        { invites.map(s => (
+        {invites.map(s => (
             <SpaceItem
                 key={s.roomId}
                 space={s}
@@ -197,10 +210,10 @@ const InnerSpacePanel = React.memo<IInnerSpacePanelProps>(({ children, isPanelCo
                 isPanelCollapsed={isPanelCollapsed}
                 onExpand={() => setPanelCollapsed(false)}
             />
-        )) }
-        { spaces.map((s, i) => (
+        ))}
+        {spaces.map((s, i) => (
             <Draggable key={s.roomId} draggableId={s.roomId} index={i}>
-                { (provided, snapshot) => (
+                {(provided, snapshot) => (
                     <SpaceItem
                         {...provided.draggableProps}
                         dragHandleProps={provided.dragHandleProps}
@@ -212,10 +225,10 @@ const InnerSpacePanel = React.memo<IInnerSpacePanelProps>(({ children, isPanelCo
                         isPanelCollapsed={isPanelCollapsed}
                         onExpand={() => setPanelCollapsed(false)}
                     />
-                ) }
+                )}
             </Draggable>
-        )) }
-        { children }
+        ))}
+        {children}
         <CreateSpaceButton isPanelCollapsed={isPanelCollapsed} setPanelCollapsed={setPanelCollapsed} />
     </div>;
 });
@@ -297,7 +310,7 @@ const SpacePanel = () => {
             SpaceStore.instance.moveRootSpace(result.source.index, result.destination.index);
         }}>
             <RovingTabIndexProvider handleHomeEnd={true} onKeyDown={onKeyDown}>
-                { ({ onKeyDownHandler }) => (
+                {({ onKeyDownHandler }) => (
                     <ul
                         className={classNames("mx_SpacePanel", { collapsed: isPanelCollapsed })}
                         onKeyDown={onKeyDownHandler}
@@ -306,7 +319,7 @@ const SpacePanel = () => {
                         ref={ref}
                     >
                         <Droppable droppableId="top-level-spaces">
-                            { (provided, snapshot) => (
+                            {(provided, snapshot) => (
                                 <AutoHideScrollbar
                                     {...provided.droppableProps}
                                     wrappedRef={provided.innerRef}
@@ -316,21 +329,21 @@ const SpacePanel = () => {
                                     } : undefined}
                                 >
                                     <InnerSpacePanel
-                                        isPanelCollapsed={isPanelCollapsed}
+                                        isPanelCollapsed={false}
                                         setPanelCollapsed={setPanelCollapsed}
                                     >
-                                        { provided.placeholder }
+                                        {provided.placeholder}
                                     </InnerSpacePanel>
                                 </AutoHideScrollbar>
-                            ) }
+                            )}
                         </Droppable>
-                        <AccessibleTooltipButton
+                        {/*  {  <AccessibleTooltipButton
                             className={classNames("mx_SpacePanel_toggleCollapse", { expanded: !isPanelCollapsed })}
                             onClick={() => setPanelCollapsed(!isPanelCollapsed)}
                             title={isPanelCollapsed ? _t("Expand space panel") : _t("Collapse space panel")}
-                        />
+                        />} */}
                     </ul>
-                ) }
+                )}
             </RovingTabIndexProvider>
         </DragDropContext>
     );

@@ -41,10 +41,13 @@ import SpaceStore, { UPDATE_SELECTED_SPACE } from "../../stores/SpaceStore";
 import { getKeyBindingsManager, RoomListAction } from "../../KeyBindingsManager";
 import UIStore from "../../stores/UIStore";
 import RoomUsersList from "../views/rooms/RoomUsersList";
+import BackdropPanel from "./BackdropPanel";
+import SpaceMenu from "./SpaceMenu";
 
 interface IProps {
     isMinimized: boolean;
     resizeNotifier: ResizeNotifier;
+    bgImage: any;
 }
 
 interface IState {
@@ -348,22 +351,22 @@ export default class UserPanel extends React.Component<IProps, IState> {
     private renderHeader(): React.ReactNode {
         return (
             <div className="mx_LeftPanel_userHeader">
-                <UserMenu isMinimized={this.props.isMinimized} />
+                <SpaceMenu isMinimized={this.props.isMinimized} />
             </div>
         );
     }
 
     private renderBreadcrumbs(): React.ReactNode {
-      //  if (this.state.showBreadcrumbs && !this.props.isMinimized) {
-            return (
-                <IndicatorScrollbar
-                    className="mx_LeftPanel_breadcrumbsContainer mx_AutoHideScrollbar"
-                    verticalScrollsHorizontally={true}
-                >
-                    <RoomBreadcrumbs />
-                </IndicatorScrollbar>
-            );
-       // }
+        //  if (this.state.showBreadcrumbs && !this.props.isMinimized) {
+        return (
+            <IndicatorScrollbar
+                className="mx_LeftPanel_breadcrumbsContainer mx_AutoHideScrollbar"
+                verticalScrollsHorizontally={true}
+            >
+                <RoomBreadcrumbs />
+            </IndicatorScrollbar>
+        );
+        // }
     }
 
     private renderSearchDialExplore(): React.ReactNode {
@@ -393,7 +396,7 @@ export default class UserPanel extends React.Component<IProps, IState> {
                     onSelectRoom={this.selectRoom}
                 />
 
-                { dialPadButton }
+                {dialPadButton}
 
                 <AccessibleTooltipButton
                     className={classNames("mx_LeftPanel_exploreButton", {
@@ -434,6 +437,11 @@ export default class UserPanel extends React.Component<IProps, IState> {
             <div className={containerClasses} ref={this.ref}>
                 <aside className="mx_LeftPanel_roomListContainer">
                     <RoomListNumResults onVisibilityChange={this.refreshStickyHeaders} />
+                    <BackdropPanel
+                        backgroundImage={this.props.bgImage}
+                        rightNow={true}
+                    />
+                    {this.renderHeader()}
                     <div className="mx_LeftPanel_roomListWrapper">
                         <div
                             className={roomListClasses}
@@ -442,12 +450,12 @@ export default class UserPanel extends React.Component<IProps, IState> {
                             // overflow:scroll;, so force it out of tab order.
                             tabIndex={-1}
                         >
-                            { roomuserList }
+                            {roomuserList}
                         </div>
                     </div>
-                    { !this.props.isMinimized && <LeftPanelWidget /> }
-                  {/*   { this.renderBreadcrumbs() } */}
-               {/*      { this.renderHeader() } */}
+                    {!this.props.isMinimized && <LeftPanelWidget />}
+                    {/*   { this.renderBreadcrumbs() } */}
+                    {/*      { this.renderHeader() } */}
                 </aside>
             </div>
         );

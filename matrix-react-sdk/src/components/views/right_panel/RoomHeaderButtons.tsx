@@ -94,7 +94,7 @@ export default class RoomHeaderButtons extends HeaderButtons<IProps> {
     }
 
     //edite Here
-    componentDidMount(): void {
+/*     componentDidMount(): void {
         this.onRoomLoad();
     }
 
@@ -104,7 +104,7 @@ export default class RoomHeaderButtons extends HeaderButtons<IProps> {
         if (lastPhase !== RightPanelPhases.RoomSummary) {
             this.setPhase(RightPanelPhases.RoomSummary);
         }
-    };
+    }; */
 
     private onRoomSummaryClicked = () => {
         // use roomPanelPhase rather than this.state.phase as it remembers the latest one if we close
@@ -118,15 +118,15 @@ export default class RoomHeaderButtons extends HeaderButtons<IProps> {
                     }
                 } else { */
         // This toggles for us, if needed
-        if (this.state.phase === RightPanelPhases.RoomSummary) {
+           if (this.state.phase !== RightPanelPhases.RoomSummary) {
             console.log(this.state.phase);
+            this.setPhase(RightPanelPhases.RoomSummary);
             return
         } else {
             console.log('Thattt');
-            this.setPhase(RightPanelPhases.RoomSummary);
-        }
-
-        //  }
+            console.log(this.state.phase);
+        } 
+        //}
     };
 
     private onNotificationsClicked = () => {
@@ -136,6 +136,7 @@ export default class RoomHeaderButtons extends HeaderButtons<IProps> {
             return
         } else {
             console.log('Thattt');
+            console.log(this.state.phase);
             this.setPhase(RightPanelPhases.NotificationPanel);
         }
     };
